@@ -25,13 +25,13 @@ public_users.get('/isbn/:isbn',function (req, res) {
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
   let findAuthor = req.params.author.toLowerCase();
-  let foundBook = []
-  for (let i =0; i < books.length; i++){
-    let bookOption = books[i].author.toLowerCase().replace(/\s/g, '');
+  let foundBook = [];
+  for (key in books){
+    let bookOption = books[key].author.toLowerCase().replace(/\s/g, '');
     if (bookOption === findAuthor){
-        foundBook.push(books[i])
+        foundBook.push(books[key])
     }
-}
+   }
    if (foundBook.length > 0){
     res.send(foundBook)
    } else {
