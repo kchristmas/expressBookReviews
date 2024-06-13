@@ -39,22 +39,21 @@ public_users.get('/author/:author',function (req, res) {
   }
 });
 
-//b1. Please note that you can get the correct output using 'Object.keys' as well.  It is just that you need to modify your code accordingly. 
-
-//b2. One such approach is:
-
-///1.  Initialize an empty array
-
-//2. use 'Object.keys()' to retrieve the keys (ie. book ISBNs)
-
-//3. Find the 'author' in the 'books' object matching the 'author' name provided in the HTTP request params using the forEach() iteration method.
-
-//4. Use the push() method to add the details of the book whose 'author' name matches the one given in the request params, and return the array as the output.
-
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    let findBook = req.params.title.toLowerCase();
+    let foundBook = [];
+    for (key in books){
+      let bookOption = books[key].title.toLowerCase().replace(/\s/g, '');
+      if (bookOption === findBook){
+          foundBook.push(books[key])
+      }
+     }
+     if (foundBook.length > 0){
+      res.send(foundBook)
+     } else {
+      res.send("Cannot find any books by that author")
+    }
 });
 
 //  Get book review
