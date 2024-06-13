@@ -52,14 +52,15 @@ public_users.get('/title/:title',function (req, res) {
      if (foundBook.length > 0){
       res.send(foundBook)
      } else {
-      res.send("Cannot find any books by that author")
+      res.send("Cannot find any books with that title.")
     }
 });
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    let reference = parseInt(req.params.isbn)
+    //res.send(JSON.stringify(books[reference].title)+ " " + JSON.stringify(books[reference].reviews));
+    res.send(books[reference].reviews)
 });
 
 module.exports.general = public_users;
