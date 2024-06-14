@@ -51,9 +51,6 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   let bookToReview = books[parseInt(req.params.isbn)];
   let bookReview = req.query.review;
   let reviewer = req.session.authorization["username"];
-  if(!authenticatedUser(reviewer)){
-    return res.send("You can't leave a review.")
-  }
   if (!isbn){
     return res.send("IBSN required to leave a review.")
   }
@@ -70,3 +67,4 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
+module.exports.isAuthenticated = authenticatedUser;
