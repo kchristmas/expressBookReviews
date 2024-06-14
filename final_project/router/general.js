@@ -6,8 +6,19 @@ const public_users = express.Router();
 
 
 public_users.post("/register", (req,res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const username = req.body.username
+  const password = req.body.password
+
+  if (username && password) {
+    if (!isValid(username)){
+        users.push({"username":username, "password":password});
+        return res.send("User successfully registered. Please log in.");
+    } else {
+        return res.send("User already exists.")
+    }
+  }
+  return res.send("Unable to register user. Please provide a valid username and password.")
+
 });
 
 // Get the book list available in the shop
@@ -59,7 +70,7 @@ public_users.get('/title/:title',function (req, res) {
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
     let reference = parseInt(req.params.isbn)
-    //res.send(JSON.stringify(books[reference].title)+ " " + JSON.stringify(books[reference].reviews));
+    //res.send(JSON.stringify(books[reference].title)+ " reviews: " + JSON.stringify(books[reference].reviews));
     res.send(books[reference].reviews)
 });
 
