@@ -46,23 +46,36 @@ regd_users.post("/login", (req,res) => {
   
 }});
 
-// Add a book review -- needs to BE UPDATED!! NOT WORKIING ON POSTMAN
+// Add a book review 
 regd_users.put("/auth/review/:isbn", (req, res) => {
-  let bookToReview = books[parseInt(req.params.isbn)];
+  let bookToReview = books[req.params.isbn];
   let bookReview = req.query.review;
   let reviewer = req.session.authorization["username"];
-  if (!isbn){
-    return res.send("IBSN required to leave a review.")
-  }
-  for (key in bookToReview.reviews){
-    if (key.username === reviewer){
-        bookToReview.reviews.reviewer.review = bookReview;
-        return res.send("Your review has been updated for" + bookToReview)
+  if (bookToReview){
+    if (bookReview){
+        bookToReview["reviews"][reviewer] = bookReview;
+        bookToReview = bookToReview;
+        return res.send("Your review has been added or updated.");
     }
   }
-  bookToReview.reviews.push({"username": reviewer, "review": bookReview});
-  return res.send("Your review has been added for " + bookToReview)
+  else {
+    return res.send("No book with that ISBN number found.")
+  }
 });
+
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    let bookToReview = books[req.params.isbn];
+    let reviewer = req.session.authorization["username"];
+    if (bookToReview){
+      if (bookToReview["reviews"][reviewer] === reviewer){
+          bookToReview["reviews"][reviewer] = {};
+          return res.send("Your review has been deleted.");
+      }
+    }
+    else {
+      return res.send("No book with that ISBN number found.")
+    }
+  });
 
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;

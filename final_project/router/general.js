@@ -72,7 +72,7 @@ public_users.get('/title/:title',function (req, res) {
 public_users.get('/review/:isbn',function (req, res) {
     let reference = parseInt(req.params.isbn)
     //res.send(JSON.stringify(books[reference].title)+ " reviews: " + JSON.stringify(books[reference].reviews));
-    res.send(books[reference].reviews)
+    res.send(books[reference]["reviews"])
 });
 
 module.exports.general = public_users;
