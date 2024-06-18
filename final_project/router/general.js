@@ -4,6 +4,7 @@ let isValid = require("./auth_users.js").isValid;
 let isAuthenticated = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+const axios = require("axios")
 
 
 public_users.post("/register", (req,res) => {
@@ -23,16 +24,30 @@ public_users.post("/register", (req,res) => {
 });
 
 // Get the book list available in the shop
-public_users.get('/books',function (req, res) {
-  let listBooks = JSON.stringify(books)  
-  res.send(listBooks);
-});
+//public_users.get('/books',function (req, res) {
+  //let listBooks = JSON.stringify(books)  
+  //res.send(listBooks);
+//});
+
+//updating to async await
+public_users.get('/books', async function (req, res) {
+    try{
+        const response = axios.get("https://kirstinchris-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/books");
+        const bookList = JSON.stringify(response);
+        res.send(bookList);
+    } catch (error){
+        res.send("Error getting books.")
+    }
+  });
+
+
 
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn',function (req, res) {
+public_users.get('/isbn/:isbn', function (req, res) {
   let reference = parseInt(req.params.isbn)
   res.send(books[reference]);
  });
+
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {

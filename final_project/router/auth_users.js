@@ -64,16 +64,15 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 });
 
 regd_users.delete("/auth/review/:isbn", (req, res) => {
-    let bookToReview = books[req.params.isbn];
+    const isbn = req.params.isbn;
     let reviewer = req.session.authorization["username"];
-    if (bookToReview){
-      if (bookToReview["reviews"][reviewer] === reviewer){
-          bookToReview["reviews"][reviewer] = {};
-          return res.send("Your review has been deleted.");
-      }
+    let userReview = books[isbn]["reviews"];
+    if (userReview[reviewer]){
+        delete bookToReview["reviews"][reviewer];
+        return res.send('Your review has been deleted.');
     }
     else {
-      return res.send("No book with that ISBN number found.")
+      return res.send("You can only delete your own reviews.")
     }
   });
 
