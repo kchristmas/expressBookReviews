@@ -68,21 +68,21 @@ public_users.get('/books', async function (req, res) {
 
   
 // Get book details based on author
-public_users.get('/author/:author',function (req, res) {
-  let findAuthor = req.params.author.toLowerCase();
-  let foundBook = [];
-  for (key in books){
-    let bookOption = books[key].author.toLowerCase().replace(/\s/g, '');
-    if (bookOption === findAuthor){
-        foundBook.push(books[key])
-    }
-   }
-   if (foundBook.length > 0){
-    res.send(foundBook)
-   } else {
-    res.send("Cannot find any books by that author")
-  }
-});
+//public_users.get('/author/:author',function (req, res) {
+  //let findAuthor = req.params.author.toLowerCase();
+  //let foundBook = [];
+//  for (key in books){
+ //   let bookOption = books[key].author.toLowerCase().replace(/\s/g, '');
+ //   if (bookOption === findAuthor){
+  //      foundBook.push(books[key])
+  //  }
+  // }
+  // if (foundBook.length > 0){
+   // res.send(foundBook)
+  // } else {
+  //  res.send("Cannot find any books by that author")
+ // }
+//});
 
 //updating to async/ await
 public_users.get('/author/:author', async function (req, res) {
@@ -123,6 +123,30 @@ public_users.get('/title/:title',function (req, res) {
       res.send(foundBook)
      } else {
       res.send("Cannot find any books with that title.")
+    }
+});
+
+//updating with async/await
+public_users.get('/title/:title',async function (req, res) {
+    let findBook = req.params.title.toLowerCase();
+    let foundBook = [];
+    try{
+        let response = await axios.get("https://kirstinchris-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/books");
+        let books = response.data;
+        for (key in books){
+        let bookOption = books[key].title.toLowerCase().replace(/\s/g, '');
+        if (bookOption === findBook){
+            foundBook.push(books[key])
+        }
+        }
+        if (foundBook.length > 0){
+        res.send(foundBook)
+        } else {
+            res.send("No books with that title found");
+        }
+    } catch (error){
+        console.log("Can't find any books with that title", error);
+        res.send("Can't find any books with that title");
     }
 });
 
