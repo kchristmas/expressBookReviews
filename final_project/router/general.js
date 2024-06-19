@@ -32,10 +32,11 @@ public_users.post("/register", (req,res) => {
 //updating to async await
 public_users.get('/books', async function (req, res) {
     try{
-        const response = axios.get("https://kirstinchris-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/books");
-        const bookList = JSON.stringify(response);
+        const response = await axios.get("https://kirstinchris-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/books");
+        const bookList = response.data;
         res.send(bookList);
     } catch (error){
+        console.error("Error getting books.", error);
         res.send("Error getting books.")
     }
   });
@@ -43,10 +44,27 @@ public_users.get('/books', async function (req, res) {
 
 
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn', function (req, res) {
-  let reference = parseInt(req.params.isbn)
-  res.send(books[reference]);
- });
+//public_users.get('/isbn/:isbn', function (req, res) {
+  //let reference = parseInt(req.params.isbn)
+ // res.send(books[reference]);
+// });
+
+ //updated using async/await
+ public_users.get('isbn/:isbn', async function (req,res) {
+    try {
+        let response = await axios.get("https://kirstinchris-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/books");
+        let bookList = response.data;
+        let isbn = req.params.isbn;
+        if (bookList.hasOwnProperty(isbn)) {
+            res.send(bookList[isbn]);
+        } else {
+            res.send("Book not found.");
+        }
+    } catch (error) {
+        console.log("Can't find that book.", error);
+        res.send("Can't find that book.");
+    }
+});
 
   
 // Get book details based on author
@@ -65,6 +83,31 @@ public_users.get('/author/:author',function (req, res) {
     res.send("Cannot find any books by that author")
   }
 });
+
+//updating to async/ await
+public_users.get('/author/:author', async function (req, res) {
+    let findAuthor = req.params.author.toLowerCase();
+    let foundBook = [];
+    try{
+        let response = await axios.get("https://kirstinchris-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/books");
+        let books = response.data;
+        for (key in books){
+        let bookOption = books[key].author.toLowerCase().replace(/\s/g, '');
+        if (bookOption === findAuthor){
+            foundBook.push(books[key])
+        }
+        }
+        if (foundBook.length > 0){
+        res.send(foundBook)
+        } else {
+        res.send("Cannot find any books by that author")
+        }
+    } catch (error){
+        console.log("Can't find any books by that author", error);
+        res.send("Can't find any books by that author")
+    }
+  });
+
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
